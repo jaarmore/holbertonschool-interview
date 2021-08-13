@@ -3,22 +3,22 @@
 
 
 def minOperations(n):
-    """Calculate the fewest number of operations needed 
-    to copyall/paste operations.
     """
-    number = 1
-    copy = 0
+    Calculate the fewest number of operations needed to copyall/paste.
+    """
+    numFind = 1
+    numTemp = 0
     operations = 0
     if type(n) is not int or n < 2:
         return 0
     else:
         for i in range(n):
-            if number == n:
+            if numFind == n:
                 return operations
-            elif n % number == 0:
-                copy = number
-                number += copy
+            elif n % numFind == 0:
+                numTemp = numFind
+                numFind += numTemp
                 operations += 2
             else:
-                number += copy
+                numFind += numTemp
                 operations += 1
