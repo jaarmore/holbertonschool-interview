@@ -3,13 +3,8 @@
 
 
 def minOperations(n):
-    """Calculares the minimum number of copyall/paste operations.
-
-    Args:
-        n: goal number
-
-    Returns:
-        int: number of operations.
+    """Calculate the fewest number of operations needed 
+    to copyall/paste operations.
     """
     number = 1
     copy = 0
