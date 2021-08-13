@@ -1,24 +1,29 @@
 #!/usr/bin/python3
-"""
-Minimun operations
-"""
+"""Min operations"""
 
 
 def minOperations(n):
+    """Calculares the minimum number of copyall/paste operations.
+
+    Args:
+        n: goal number
+
+    Returns:
+        int: number of operations.
     """
-    Calculate the fewest number of operations needed to copyall/paste operations.
-    """
-    if n <= 1:
+    number = 1
+    copy = 0
+    operations = 0
+    if type(n) is not int or n < 2:
         return 0
-
-    divisor = 2
-    oper = 0
-    quotient = n
-    while quotient > 1:
-        if (quotient % divisor) == 0:
-            quotient = quotient // divisor
-            oper += divisor
-        else:
-            divisor += 1
-
-    return oper
+    else:
+        for i in range(n):
+            if number == n:
+                return operations
+            elif n % number == 0:
+                copy = number
+                number += copy
+                operations += 2
+            else:
+                number += copy
+                operations += 1
