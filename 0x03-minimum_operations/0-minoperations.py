@@ -1,5 +1,7 @@
 #!/usr/bin/python3
-"""Min operations"""
+"""
+Minimun operations
+"""
 
 
 def minOperations(n):
