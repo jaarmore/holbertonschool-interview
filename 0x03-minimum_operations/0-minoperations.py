@@ -1,15 +1,12 @@
 #!/usr/bin/python3
-"""Minimun operations"""
+"""
+Minimun operations
+"""
 
 
 def minOperations(n):
-    """Calculate the fewest number of operations needed to copyall/paste operations.
-
-    Args:
-        n: Number of operations to find
-
-    Returns:
-        int: number of operations to execute.
+    """
+    Calculate the fewest number of operations needed to copyall/paste operations.
     """
     number = 1
     copy = 0
