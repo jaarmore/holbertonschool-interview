@@ -1,110 +1,11 @@
 #include "sandpiles.h"
-
 /**
- * sandpiles_sum - Add grid2 to grid1 and make sure is a stable sandpile
- * @grid1: First sandpile
- * @grid2: Second sandpile
- * Return: Nothing
- */
-void sandpiles_sum(int grid1[3][3], int grid2[3][3])
-{
-	int i, j;
-
-	for (i = 0; i < 3; i++)	/* Add each element from grid2 to grid1 */
-		for (j = 0; j < 3; j++)
-			grid1[i][j] += grid2[i][j];
-
-	while (eval_is_stable(grid1) != TRUE)	/* While grid1 not stable */
-	{
-		printf("=\n");
-		prn_grid(grid1);			/* Print the sandpile */
-
-		do_toppling_round(grid1);	/* Do the toppling round on the sandpile */
-	}
-}
-
-/**
- * eval_is_stable- Evaluate if sadpile is stable
- * @grid1: The sandpile
- * Return: [ TRUE | FALSE ]
- */
-int eval_is_stable(int grid1[3][3])
-{
-	int i, j;
-
-	for (i = 0; i < 3; i++)
-		for (j = 0; j < 3; j++)
-			if (grid1[i][j] > 3)	/* If cell has more then 3 grains */
-				return (FALSE);
-
-	return (TRUE);
-}
-
-/**
- * do_toppling_round - Do the toppling round to the sandpile
- * @grid1: The sandpile
- * Return: Nothing
- */
-void do_toppling_round(int grid1[3][3])
-{
-	int i = 0, j = 0;
-
-	oper_celd(grid1, i, j, INIT);	/* Initialize the grid to analize */
-	for (i = 0; i < 3; i++)
-		for (j = 0; j < 3; j++)
-			oper_celd(grid1, i, j, CALC);	/* Calculate the cell i,j */
-}
-
-
-/**
- * oper_celd - Evaluate what operations are needed arround the cell
- * @grid1: The grid
- * @i: Row
- * @j: Column
- * @cmd: Command
- */
-void oper_celd(int grid1[3][3], int i, int j, char cmd)
-{
-	static int grid[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
-	int r, c;
-
-	if (cmd == INIT)		/* When init */
-	{
-		for (r = 0; r < 3; r++)
-			for (c = 0; c < 3; c++)
-				grid[r][c] = grid1[r][c];
-		return;
-	}
-	if (grid[i][j] <= 3)	/* Eval stable cell */
-		return;
-	if (i == 0)				/* Eval UP side of cell */
-		grid1[i][j]--;
-	else
-		if (grid[i - 1][j] <= 3)
-			grid1[i][j]--, grid1[i - 1][j]++;
-	if (j == 2)				/* Eval RIGHT side of cell */
-		grid1[i][j]--;
-	else
-		if (grid[i][j + 1] <= 3)
-			grid1[i][j]--, grid1[i][j + 1]++;
-	if (i == 2)				/* Eval BOTTOM side of cell */
-		grid1[i][j]--;
-	else
-		if (grid[i + 1][j] <= 3)
-			grid1[i][j]--, grid1[i + 1][j]++;
-	if (j == 0)				/* Eval LEFT side of cell */
-		grid1[i][j]--;
-	else
-		if (grid[i][j - 1] <= 3)
-			grid1[i][j]--, grid1[i][j - 1]++;
-}
-
-/**
- * prn_grid - print the grid
- * @grid: The grid
- * Return: Nothing
- */
-void prn_grid(int grid[3][3])
+* print_grid - Prints a grid.
+*
+* @grid: Grid to be printed.
+* Return: Nothing.
+*/
+static void print_grid(int grid[3][3])
 {
 	int i, j;
 
@@ -117,5 +18,108 @@ void prn_grid(int grid[3][3])
 			printf("%d", grid[i][j]);
 		}
 		printf("\n");
+	}
+}
+/**
+* is_stable - Define if a sandpile is stable or not.
+*
+* @grid: Grid to test.
+* Return: 1 of stable, otherwise 0.
+*/
+int is_stable(int grid[3][3])
+{
+	int i, j;
+
+	for (i = 0; i < 3; i++)
+	{
+		for (j = 0; j < 3; j++)
+		{
+			if (grid[i][j] > 3)
+				return (0);
+		}
+	}
+	return (1);
+}
+/**
+* topple - Colapse de sandpile if >3.
+*
+* @n: number of grains.
+* Return: 4 if it collapses.
+*/
+int topple(int n)
+{
+	if (n > 3)
+		return (4);
+	else
+		return (0);
+}
+/**
+* unstable_neighbors - checks if the box is going to recieve
+* grains from near collapsed boxes.
+* @grid1: Grid to be analize.
+* @i: Rows coordinate.
+* @j: Cols coordinate.
+* Return: number of grain recieved.
+*/
+int unstable_neighbors(int grid1[3][3], int i, int j)
+{
+	int up = 0, down = 0, right = 0, left = 0;
+
+	if (i < 0 || i > 2 || j < 0 || j > 2)
+		return (0);
+
+	if (i - 1 >= 0 && i - 1 < 3)
+		if (grid1[i - 1][j] > 3)
+			up = 1;
+	if (i + 1 >= 0 && i + 1 < 3)
+		if (grid1[i + 1][j] > 3)
+			down = 1;
+	if (j - 1 >= 0 && j - 1 < 3)
+		if (grid1[i][j - 1] > 3)
+			left = 1;
+	if (j + 1 >= 0 && j + 1 < 3)
+		if (grid1[i][j + 1] > 3)
+			right = 1;
+
+	return (up + down + left + right);
+}
+/**
+* sandpiles_sum - performs sandpiles addition.
+*
+* @grid1: grid1.
+* @grid2: grid2.
+* Return: Nothing.
+*/
+void sandpiles_sum(int grid1[3][3], int grid2[3][3])
+{
+	int i, j;
+	int g_copy[3][3];
+	int toppling, neighbors;
+
+	for (i = 0; i < 3; i++)
+	{
+		for (j = 0; j < 3; j++)
+			grid1[i][j] += grid2[i][j];
+	}
+	while (is_stable(grid1) != 1)
+	{
+		printf("=\n");
+		print_grid(grid1);
+		for (i = 0; i < 3; i++)
+		{
+			for (j = 0; j < 3; j++)
+			{
+				g_copy[i][j] = grid1[i][j];
+			}
+		}
+		for (i = 0; i < 3; i++)
+		{
+			for (j = 0; j < 3; j++)
+			{
+				toppling =  topple(g_copy[i][j]);
+				neighbors = unstable_neighbors(g_copy, i, j);
+				grid1[i][j] = grid1[i][j] - toppling + neighbors;
+			}
+		}
 	}
 }
